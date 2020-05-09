@@ -1,0 +1,35 @@
+{
+  "name": "dankmemerapi",
+  "version": "1.0.0",
+  "description": "An api wrapper for dankmemer.services.",
+  "main": "index.js",
+  "dependencies": {
+    "file-type": "^14.3.0",
+    "phin": "^3.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.5",
+    "@types/phin": "^3.4.0",
+    "typescript": "^3.8.3"
+  },
+  "scripts": {
+    "build": "rm -rf build && tsc && echo Build Finished"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FurryBotCo/DankMemerAPI.git"
+  },
+  "keywords": [
+    "dankmemer",
+    "api",
+    "memes",
+    "image-generation",
+    "images"
+  ],
+  "author": "Donovan_DMC <dwddaniels262@gmail.com> (https://furry.cool)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FurryBotCo/DankMemerAPI/issues"
+  },
+  "homepage": "https://github.com/FurryBotCo/DankMemerAPI#readme"
+}
