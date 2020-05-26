@@ -1,6 +1,6 @@
 {
   "name": "dankmemerapi",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "An api wrapper for dankmemer.services.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -14,7 +14,8 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "build": "rm -rf build && tsc && echo Build Finished"
+    "build": "rm -rf build && tsc && echo Build Finished",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
