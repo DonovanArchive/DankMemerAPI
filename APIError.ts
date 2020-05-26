@@ -1,15 +1,15 @@
-export = class APIError<B = {
-	success: boolean;
-	error: string;
-	serverError: {
-		error: string;
-		status: number;
-	};
-}> extends Error {
+export = class APIError extends Error {
 	statusCode: number;
 	statusMessage: string;
-	body: B;
-	constructor(statusCode: number, statusMessage: string, body: B) {
+	body?: {
+		success: boolean;
+		error: string;
+		serverError: {
+			error: string;
+			status: number;
+		};
+	};
+	constructor(statusCode: number, statusMessage: string, body: APIError["body"]) {
 		super(`${statusCode} ${statusMessage}`);
 		this.statusCode = statusCode;
 		this.statusMessage = statusMessage;
