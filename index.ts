@@ -1,33 +1,12 @@
 import phin from "phin";
 import * as pkg from "./package.json";
 import fileType from "file-type";
-import { runInThisContext } from "vm";
-import { throws } from "assert";
+import APIError from "./APIError";
 
 interface MemeRequestResponse {
 	ext: string;
 	mime: string;
 	file: Buffer;
-}
-
-class APIError<B extends any = {
-	success: boolean;
-	error: string;
-	serverError: {
-		error: string;
-		status: number;
-	};
-}> extends Error {
-	statusCode: number;
-	statusMessage: string;
-	body: B;
-	constructor(statusCode: number, statusMessage: string, body: B) {
-		super(`${statusCode} ${statusMessage}`);
-		this.statusCode = statusCode;
-		this.statusMessage = statusMessage;
-		this.name = "APIError";
-		this.body = body;
-	}
 }
 
 export = class DankMemerAPI {

@@ -107,4 +107,4 @@ dist
 build/
 
 # test
-test.js
+test/
