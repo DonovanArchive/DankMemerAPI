@@ -10,10 +10,23 @@ interface MemeRequestResponse {
 	file: Buffer;
 }
 
-class APIError extends Error {
-	constructor(message: string) {
-		super(message);
+class APIError<B extends any = {
+	success: boolean;
+	error: string;
+	serverError: {
+		error: string;
+		status: number;
+	};
+}> extends Error {
+	statusCode: number;
+	statusMessage: string;
+	body: B;
+	constructor(statusCode: number, statusMessage: string, body: B) {
+		super(`${statusCode} ${statusMessage}`);
+		this.statusCode = statusCode;
+		this.statusMessage = statusMessage;
 		this.name = "APIError";
+		this.body = body;
 	}
 }
 
@@ -62,7 +75,7 @@ export = class DankMemerAPI {
 				j = b.toString();
 			}
 
-			throw new APIError(`${r.statusCode} ${r.statusMessage}: ${j}`);
+			throw new APIError(r.statusCode, r.statusMessage, j);
 		}
 		const type = await fileType.fromBuffer(b).catch(() => ({
 			ext: null,
@@ -170,6 +183,8 @@ export = class DankMemerAPI {
 	async vr(text: string) { return this.request("vr", [], [], text); }
 	async walking(text: string) { return this.request("walking", [], [], text); }
 	async wanted(avatar: string) { return this.request("wanted", [avatar], [], ""); }
+	async warp(avatar: string) { return this.request("warp", [avatar], [], ""); }
+	async whodidthis(avatar: string) { return this.request("whodidthis", [avatar], []); }
 	async whothisis(avatar: string, text: string) { return this.request("whothisis", [avatar], [], text); }
 	async yomomma() { return this.request("yomomma", [], [], "").then(r => r.file.toString()); }
 	async youtube(avatar: string, username: string, text: string) { return this.request("youtube", [avatar], [username], text); }
