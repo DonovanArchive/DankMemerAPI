@@ -2,6 +2,8 @@ import phin from "phin";
 import * as pkg from "./package.json";
 import fileType from "file-type";
 import APIError from "./APIError";
+import * as https from "https";
+import fetch from "node-fetch";
 
 interface MemeRequestResponse {
 	ext: string;
@@ -13,10 +15,18 @@ export = class DankMemerAPI {
 	apiKey: string;
 	userAgent: string;
 	cacheRequests: boolean;
-	constructor(apiKey: string, userAgent?: string, cacheRequests?: boolean) {
-		this.apiKey = apiKey;
-		this.userAgent = userAgent || `DankMemerAPI/${pkg.version} (https://github.com/FurryBotCo/DankMemerAPI)`;
-		this.cacheRequests = !!cacheRequests;
+	timeout: number;
+	constructor(d: {
+		apiKey: string;
+		userAgent?: string;
+		cacheRequests?: boolean;
+		timeout?: number;
+	}) {
+		if (!d || !d.apiKey) throw new TypeError("missing api key");
+		this.apiKey = d.apiKey;
+		this.userAgent = d.userAgent || `DankMemerAPI/${pkg.version} (https://github.com/FurryBotCo/DankMemerAPI)`;
+		this.cacheRequests = !!d.cacheRequests;
+		this.timeout = !d.timeout ? 3e4 : d.timeout;
 	}
 
 	private async request(path: string, avatars: string[] | string = [], usernames: string[] | string = [], text = "", extra: { [k: string]: string; } = {}): Promise<MemeRequestResponse> {
@@ -33,20 +43,20 @@ export = class DankMemerAPI {
 		if (usernames && usernames.length > 0) data.usernames = usernames;
 		if (text && text.length > 0) data.text = text;
 
-		const r = await phin({
-			method: "POST",
-			url: this.cacheRequests ? `https://api.furry.bot/V2/dankmemer/${path}` : `https://dankmemer.services/api/${path}`,
+		const r = await fetch(this.cacheRequests && path !== "yomomma" ? `https://api.furry.bot/V2/dankmemer/${path}` : `https://dankmemer.services/api/${path}`, {
+			method: path === "yomomma" ? "GET" : "POST",
 			headers: {
 				"Authorization": this.apiKey,
 				"User-Agent": this.userAgent,
 				"Content-Type": "application/json"
 			},
-			timeout: 3e4,
-			data
+			timeout: this.timeout,
+			body: JSON.stringify(data)
 		});
+
 		// it returns a buffer but says it returns a string for some reason??
-		const b = r.body as unknown as Buffer;
-		if (r.statusCode !== 200) {
+		const b = await r.buffer();
+		if (r.status !== 200) {
 			let j;
 			try {
 				j = JSON.parse(b.toString());
@@ -54,7 +64,7 @@ export = class DankMemerAPI {
 				j = b.toString();
 			}
 
-			throw new APIError(r.statusCode, r.statusMessage, j);
+			throw new APIError(r.status, r.statusText, j);
 		}
 		const type = await fileType.fromBuffer(b).catch(() => ({
 			ext: null,
@@ -102,14 +112,17 @@ export = class DankMemerAPI {
 	async egg(avatar: string) { return this.request("egg", [avatar], [], ""); }
 	async excuseme(text: string) { return this.request("excuseme", [], [], text); }
 	async expanddong(text: string) { return this.request("expanddog", [], [], text); }
+	async expandingwwe(text: string) { return this.request("expandingwwe", [], [], text); }
 	async facts(text: string) { return this.request("facts", [], [], text); }
 	async failure(avatar: string) { return this.request("failure", [avatar], [], ""); }
 	async fakenews(avatar: string) { return this.request("fakenews", [avatar], [], ""); }
+	async farmer(text: string) { return this.request("farmer", [], [], text); }
 	async fedora(avatar: string) { return this.request("fedora", [avatar], [], ""); }
 	async floor(avatar: string, text: string) { return this.request("floor", [avatar], [], text); }
 	async fuck(text: string) { return this.request("fuck", [], [], text); }
 	async garfield(avatar: string, text: string) { return this.request("garfield", [avatar], [], text); }
 	async gay(avatar: string) { return this.request("gay", [avatar], [], ""); }
+	async godwhy(text: string) { return this.request("godwhy", [], [], text); }
 	async goggles(avatar: string) { return this.request("goggles", [avatar], [], ""); }
 	async hitler(avatar: string) { return this.request("hitler", [avatar], [], ""); }
 	async humansgood(text: string) { return this.request("humansgood", [], [], text); }
@@ -118,6 +131,7 @@ export = class DankMemerAPI {
 	async ipad(avatar: string) { return this.request("ipad", [avatar], [], ""); }
 	async jail(avatar: string) { return this.request("jail", [avatar], [], ""); }
 	async justpretending(text: string) { return this.request("justpretending", [], [], text); }
+	async keepurdistance(text: string) { return this.request("keepurdistance", [], [], text); }
 	async kimborder(avatar: string) { return this.request("kimborder", [avatar], [], ""); }
 	async knowyourlocation(text: string) { return this.request("knowyourlocation", [], [], text); }
 	async kowalski(text: string) { return this.request("kowalski", [], [], text); }
@@ -127,9 +141,10 @@ export = class DankMemerAPI {
 	async madethis(avatars: [string, string]) { return this.request("madethis", avatars, [], ""); }
 	async magik(avatar: string) { return this.request("magik", [avatar], [], ""); }
 	async master(text: string) { return this.request("master", [], [], text); }
-	async meme(avatar: string, extra?: { top_text?: string; bottom_text?: string; color?: string; font?: string; }) { return this.request("meme", [avatar], [], "", extra); }
+	async meme(avatar: string, extra?: { top_text?: string; bottom_text?: string; color?: string; font?: "arial" | "arimobold" | "impact" | "robotomedium" | "robotoregular" | "sans" | "segoeuireg" | "tahoma" | "verdana"; }) { return this.request("meme", [avatar], [], "", extra); }
 	async note(text: string) { return this.request("note", [], [], text); }
 	async nothing(text: string) { return this.request("nothing", [], [], text); }
+	async obama(text: string) { return this.request("obama", [], [], text); }
 	async ohno(text: string) { return this.request("ohno", [], [], text); }
 	async piccolo(text: string) { return this.request("piccolo", [], [], text); }
 	async plan(text: string) { return this.request("plan", [], [], text); }
@@ -165,6 +180,7 @@ export = class DankMemerAPI {
 	async warp(avatar: string) { return this.request("warp", [avatar], [], ""); }
 	async whodidthis(avatar: string) { return this.request("whodidthis", [avatar], []); }
 	async whothisis(avatar: string, text: string) { return this.request("whothisis", [avatar], [], text); }
+	/** Always uses direct requests, cannot be cached */
 	async yomomma() { return this.request("yomomma", [], [], "").then(r => r.file.toString()); }
 	async youtube(avatar: string, username: string, text: string) { return this.request("youtube", [avatar], [username], text); }
 };
