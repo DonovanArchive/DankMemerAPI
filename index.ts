@@ -169,7 +169,7 @@ export = class DankMemerAPI {
 	async thesearch(text: string) { return this.request("thesearch", [], [], text); }
 	async trash(avatar: string) { return this.request("trash", [avatar], [], ""); }
 	async trigger(avatar: string) { return this.request("trigger", [avatar], [], ""); }
-	async tweet(avatar: string, usernames: [string] | [string, string], extra?: { altstyle?: string; }) { return this.request("tweet", [avatar], usernames, "", extra); }
+	async tweet(avatar: string, usernames: [string] | [string, string], text: string, extra?: { altstyle?: string; }) { return this.request("tweet", [avatar], usernames, text, extra); }
 	async ugly(avatar: string) { return this.request("ugly", [avatar], [], ""); }
 	async unpopular(avatar: string, text: string) { return this.request("unpopular", [avatar], [], text); }
 	async violence(text: string) { return this.request("violence", [], [], text); }
