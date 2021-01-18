@@ -56,7 +56,7 @@ class DankMemerAPI {
 				timeout: this.timeout
 			});
 
-			return r.buffer().then(v => v.toString());
+			return r.json().then(v => v.text);
 		} else {
 			const r = await fetch(this.cacheRequests ? `https://api.furry.bot/V2/dankmemer/${path}` : `https://dankmemer.services/api/${path}`, {
 				method: path === "yomomma" ? "GET" : "POST",
