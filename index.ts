@@ -29,7 +29,9 @@ class DankMemerAPI {
 		this.timeout = !d.timeout ? 3e4 : d.timeout;
 	}
 
-	private async request(path: string, avatars: string[] | string = [], usernames: string[] | string = [], text = "", extra: { [k: string]: string; } = {}): Promise<MemeRequestResponse> {
+	async request(path: "yomomma", avatars?: string[] | string, usernames?: string[] | string, text?: string, extra?: { [k: string]: string; }): Promise<string>;
+	async request(path: string, avatars?: string[] | string, usernames?: string[] | string, text?: string, extra?: { [k: string]: string; }): Promise<MemeRequestResponse>;
+	async request(path: string, avatars: string[] | string = [], usernames: string[] | string = [], text = "", extra: { [k: string]: string; } = {}): Promise<MemeRequestResponse | string> {
 		if (!Array.isArray(avatars)) avatars = [avatars];
 		if (!Array.isArray(usernames)) usernames = [usernames];
 		const data: {
@@ -43,40 +45,52 @@ class DankMemerAPI {
 		if (usernames && usernames.length > 0) data.usernames = usernames;
 		if (text && text.length > 0) data.text = text;
 
-		const r = await fetch(this.cacheRequests && path !== "yomomma" ? `https://api.furry.bot/V2/dankmemer/${path}` : `https://dankmemer.services/api/${path}`, {
-			method: path === "yomomma" ? "GET" : "POST",
-			headers: {
-				"Authorization": this.apiKey,
-				"User-Agent": this.userAgent,
-				"Content-Type": "application/json"
-			},
-			timeout: this.timeout,
-			...(path === "yomomma" ? {} : {
+		if (path === "yomomma") {
+			const r = await fetch(`https://dankmemer.services/api/${path}`, {
+				method: "GET",
+				headers: {
+					"Authorization": this.apiKey,
+					"User-Agent": this.userAgent,
+					"Content-Type": "application/json"
+				},
+				timeout: this.timeout
+			});
+
+			return r.buffer().then(v => v.toString());
+		} else {
+			const r = await fetch(this.cacheRequests ? `https://api.furry.bot/V2/dankmemer/${path}` : `https://dankmemer.services/api/${path}`, {
+				method: path === "yomomma" ? "GET" : "POST",
+				headers: {
+					"Authorization": this.apiKey,
+					"User-Agent": this.userAgent,
+					"Content-Type": "application/json"
+				},
+				timeout: this.timeout,
 				body: JSON.stringify(data)
-			})
-		});
+			});
 
-		// it returns a buffer but says it returns a string for some reason??
-		const b = await r.buffer();
-		if (r.status !== 200) {
-			let j;
-			try {
-				j = JSON.parse(b.toString());
-			} catch (e) {
-				j = b.toString();
+			// it returns a buffer but says it returns a string for some reason??
+			const b = await r.buffer();
+			if (r.status !== 200) {
+				let j;
+				try {
+					j = JSON.parse(b.toString());
+				} catch (e) {
+					j = b.toString();
+				}
+
+				throw new APIError(r.status, r.statusText, j);
 			}
-
-			throw new APIError(r.status, r.statusText, j);
+			const type = await fileType.fromBuffer(b).catch(() => ({
+				ext: null,
+				mime: null
+			})) as fileType.FileTypeResult;
+			return {
+				ext: type.ext,
+				mime: type.mime,
+				file: b
+			};
 		}
-		const type = await fileType.fromBuffer(b).catch(() => ({
-			ext: null,
-			mime: null
-		})) as fileType.FileTypeResult;
-		return {
-			ext: type.ext,
-			mime: type.mime,
-			file: b
-		};
 	}
 
 	// I could have made this getters, but I believe separate
@@ -183,7 +197,7 @@ class DankMemerAPI {
 	async whodidthis(avatar: string) { return this.request("whodidthis", [avatar], []); }
 	async whothisis(avatar: string, text: string) { return this.request("whothisis", [avatar], [], text); }
 	/** Always uses direct requests, cannot be cached */
-	async yomomma() { return this.request("yomomma", [], [], "").then(r => r.file.toString()); }
+	async yomomma() { return this.request("yomomma", [], [], ""); }
 	async youtube(avatar: string, username: string, text: string) { return this.request("youtube", [avatar], [username], text); }
 };
 
