@@ -185,7 +185,5 @@ class DankMemerAPI {
 	async youtube(avatar: string, username: string, text: string) { return this.request("youtube", [avatar], [username], text); }
 };
 
-exports = DankMemerAPI;
 export default DankMemerAPI;
-exports.APIError = APIError;
-exports.DankMemerAPI = DankMemerAPI;
+export { DankMemerAPI, APIError };
