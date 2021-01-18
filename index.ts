@@ -51,7 +51,9 @@ class DankMemerAPI {
 				"Content-Type": "application/json"
 			},
 			timeout: this.timeout,
-			body: JSON.stringify(data)
+			...(path === "yomomma" ? {} : {
+				body: JSON.stringify(data)
+			})
 		});
 
 		// it returns a buffer but says it returns a string for some reason??
