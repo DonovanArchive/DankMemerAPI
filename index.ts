@@ -5,13 +5,13 @@ import APIError from "./APIError";
 import * as https from "https";
 import fetch from "node-fetch";
 
-interface MemeRequestResponse {
+export interface MemeRequestResponse {
 	ext: string;
 	mime: string;
 	file: Buffer;
 }
 
-export = class DankMemerAPI {
+class DankMemerAPI {
 	apiKey: string;
 	userAgent: string;
 	cacheRequests: boolean;
@@ -111,7 +111,7 @@ export = class DankMemerAPI {
 	async door(avatar: string) { return this.request("door", [avatar], [], ""); }
 	async egg(avatar: string) { return this.request("egg", [avatar], [], ""); }
 	async excuseme(text: string) { return this.request("excuseme", [], [], text); }
-	async expanddong(text: string) { return this.request("expanddog", [], [], text); }
+	async expanddong(text: string) { return this.request("expanddong", [], [], text); }
 	async expandingwwe(text: string) { return this.request("expandingwwe", [], [], text); }
 	async facts(text: string) { return this.request("facts", [], [], text); }
 	async failure(avatar: string) { return this.request("failure", [avatar], [], ""); }
@@ -184,3 +184,6 @@ export = class DankMemerAPI {
 	async yomomma() { return this.request("yomomma", [], [], "").then(r => r.file.toString()); }
 	async youtube(avatar: string, username: string, text: string) { return this.request("youtube", [avatar], [username], text); }
 };
+
+export default DankMemerAPI;
+module.exports = DankMemerAPI;
