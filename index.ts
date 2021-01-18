@@ -99,7 +99,7 @@ export = class DankMemerAPI {
 	async citation(text: string) { return this.request("citation", [], [], text); }
 	async communism(avatar: string) { return this.request("communism", [avatar], [], ""); }
 	async confusedcat(text: string) { return this.request("confusedcat", [], [], text); }
-	async corporate(avatar: string) { return this.request("corporate", [avatar], [], ""); }
+	async corporate(avatar: string | [string, string?]) { return this.request("corporate", Array.isArray(avatar) ? avatar : [avatar], [], ""); }
 	async crab(text: string) { return this.request("crab", [], [], text); }
 	async cry(text: string) { return this.request("cry", [], [], text); }
 	async dab(avatar: string) { return this.request("dab", [avatar], [], ""); }
