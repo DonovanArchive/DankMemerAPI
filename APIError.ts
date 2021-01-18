@@ -1,4 +1,4 @@
-export = class APIError extends Error {
+export default class APIError extends Error {
 	statusCode: number;
 	statusMessage: string;
 	body?: {
