@@ -30,8 +30,8 @@ export = class DankMemerAPI {
 	}
 
 	private async request(path: string, avatars: string[] | string = [], usernames: string[] | string = [], text = "", extra: { [k: string]: string; } = {}): Promise<MemeRequestResponse> {
-		avatars = typeof avatars === "string" ? [avatars] : avatars;
-		usernames = typeof usernames === "string" ? [usernames] : usernames;
+		if (!Array.isArray(avatars)) avatars = [avatars];
+		if (!Array.isArray(usernames)) usernames = [usernames];
 		const data: {
 			avatars?: string[];
 			usernames?: string[];
@@ -87,7 +87,7 @@ export = class DankMemerAPI {
 	async america(avatar: string) { return this.request("america", [avatar], [], ""); }
 	async armor(text: string) { return this.request("armor", [], [], text); }
 	async balloon(text: string) { return this.request("balloon", [], [], text); }
-	async bed(avatars: [string, string]) { return this.request("bed", avatars, [], ""); }
+	async bed(avatars: [avatar1: string, avatar2: string]) { return this.request("bed", avatars, [], ""); }
 	async bongocat(avatar: string) { return this.request("bongocat", [avatar], [], ""); }
 	async boo(text: string) { return this.request("boo", [], [], text); }
 	async brain(text: string) { return this.request("brain", [], [], text); }
@@ -99,7 +99,7 @@ export = class DankMemerAPI {
 	async citation(text: string) { return this.request("citation", [], [], text); }
 	async communism(avatar: string) { return this.request("communism", [avatar], [], ""); }
 	async confusedcat(text: string) { return this.request("confusedcat", [], [], text); }
-	async corporate(avatar: string | [string, string?]) { return this.request("corporate", Array.isArray(avatar) ? avatar : [avatar], [], ""); }
+	async corporate(avatars: string | [avatar1: string, avatar2?: string]) { return this.request("corporate", Array.isArray(avatars) ? avatars : [avatars], [], ""); }
 	async crab(text: string) { return this.request("crab", [], [], text); }
 	async cry(text: string) { return this.request("cry", [], [], text); }
 	async dab(avatar: string) { return this.request("dab", [avatar], [], ""); }
@@ -138,7 +138,7 @@ export = class DankMemerAPI {
 	async laid(avatar: string) { return this.request("laid", [avatar], [], ""); }
 	async letmein(text: string) { return this.request("letmein", [], [], text); }
 	async lick(text: string) { return this.request("lick", [], [], text); }
-	async madethis(avatars: [string, string]) { return this.request("madethis", avatars, [], ""); }
+	async madethis(avatars: [avatar1: string, avatar2: string]) { return this.request("madethis", avatars, [], ""); }
 	async magik(avatar: string) { return this.request("magik", [avatar], [], ""); }
 	async master(text: string) { return this.request("master", [], [], text); }
 	async meme(avatar: string, extra?: { top_text?: string; bottom_text?: string; color?: string; font?: "arial" | "arimobold" | "impact" | "robotomedium" | "robotoregular" | "sans" | "segoeuireg" | "tahoma" | "verdana"; }) { return this.request("meme", [avatar], [], "", extra); }
@@ -156,20 +156,20 @@ export = class DankMemerAPI {
 	async salty(avatar: string) { return this.request("salty", [avatar], [], ""); }
 	async satan(avatar: string) { return this.request("satan", [avatar], [], ""); }
 	async savehumanity(text: string) { return this.request("savehumanity", [], [], text); }
-	async screams(avatars: [string, string]) { return this.request("screams", avatars, [], ""); }
+	async screams(avatars: [avatar1: string, avatar2: string]) { return this.request("screams", avatars, [], ""); }
 	async shit(text: string) { return this.request("shit", [], [], text); }
 	async sickban(avatar: string) { return this.request("sickban", [avatar], [], ""); }
-	async slap(avatars: [string, string]) { return this.request("slap", avatars, [], ""); }
+	async slap(avatars: [avatar1: string, avatar2: string]) { return this.request("slap", avatars, [], ""); }
 	async slapsroof(text: string) { return this.request("slapsroof", [], [], text); }
 	async sneakyfox(text: string) { return this.request("sneakyfox", [], [], text); }
-	async spank(avatars: [string, string]) { return this.request("spank", avatars, [], ""); }
+	async spank(avatars: [avatar1: string, avatar2: string]) { return this.request("spank", avatars, [], ""); }
 	async stroke(text: string) { return this.request("stroke", [], [], text); }
 	async surprised(text: string) { return this.request("surprised", [], [], text); }
 	async sword(username: string, text: string) { return this.request("sword", [], [username], text); }
 	async thesearch(text: string) { return this.request("thesearch", [], [], text); }
 	async trash(avatar: string) { return this.request("trash", [avatar], [], ""); }
 	async trigger(avatar: string) { return this.request("trigger", [avatar], [], ""); }
-	async tweet(avatar: string, usernames: [string] | [string, string], text: string, extra?: { altstyle?: string; }) { return this.request("tweet", [avatar], usernames, text, extra); }
+	async tweet(avatar: string, usernames: [user1: string, user2?: string], text: string, extra?: { altstyle?: string; }) { return this.request("tweet", [avatar], usernames, text, extra); }
 	async ugly(avatar: string) { return this.request("ugly", [avatar], [], ""); }
 	async unpopular(avatar: string, text: string) { return this.request("unpopular", [avatar], [], text); }
 	async violence(text: string) { return this.request("violence", [], [], text); }
