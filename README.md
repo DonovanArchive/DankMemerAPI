@@ -1,6 +1,8 @@
 # Dank Memer API
 This is an api wrapper built for Dank Memer's [Image Generation API](https://dankmemer.services).
 
+[![](https://nodei.co/npm/dankmemerapi.png)](https://npm.im/dankmemerapi)
+
 ## JavaScript Example:
 ```js
 const DankMemerAPI = require("dankmemerapi");
