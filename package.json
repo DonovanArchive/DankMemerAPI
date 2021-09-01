@@ -1,22 +1,23 @@
 {
 	"name": "dankmemerapi",
-	"version": "1.0.22",
+	"version": "1.0.23",
 	"description": "An api wrapper for dankmemer.services.",
 	"main": "build/index.js",
 	"types": "build/index.d.ts",
 	"dependencies": {
-		"file-type": "^16.2.0",
-		"node-fetch": "^2.6.1"
+		"file-type": "^16.5.3",
+		"node-fetch": "^3.0.0"
 	},
 	"devDependencies": {
-		"@types/node": "^14.14.21",
-		"@types/node-fetch": "^2.5.8",
+		"@types/node": "^16.7.10",
+		"@types/node-fetch": "^2.5.12",
 		"@types/phin": "^3.4.0",
-		"typescript": "^4.1.3"
+		"@uwu-codes/eslint-config": "^1.0.20",
+		"@uwu-codes/tsconfig": "^1.0.1",
+		"typescript": "^4.4.2"
 	},
 	"scripts": {
-		"build": "rm -rf build && tsc && echo Build Finished",
-		"prepare": "npm run build"
+		"prepublishOnly": "rm -rf build && tsc && echo Build Finished"
 	},
 	"repository": {
 		"type": "git",
@@ -29,10 +30,10 @@
 		"image-generation",
 		"images"
 	],
-	"author": "Donovan_DMC <dwddaniels262@gmail.com> (https://furry.cool)",
+	"author": "Donovan_DMC <hewwo@yiff.rocks> (https://furry.cool)",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/FurryBotCo/DankMemerAPI/issues"
+		"url": "https://github.com/DonovanDMC/DankMemerAPI/issues"
 	},
-	"homepage": "https://github.com/FurryBotCo/DankMemerAPI#readme"
+	"homepage": "https://github.com/DonovanDMC/DankMemerAPI#readme"
 }
