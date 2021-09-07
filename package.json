@@ -1,9 +1,9 @@
 {
 	"name": "dankmemerapi",
-	"version": "1.0.25",
+	"version": "1.0.26",
 	"description": "An api wrapper for dankmemer.services.",
-	"main": "build/index.js",
-	"types": "build/index.d.ts",
+	"main": "build/src/index.js",
+	"types": "build/src/index.d.ts",
 	"dependencies": {
 		"file-type": "^16.5.3",
 		"node-fetch": "^3.0.0"
