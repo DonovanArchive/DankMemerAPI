@@ -1,15 +1,16 @@
 {
 	"name": "dankmemerapi",
-	"version": "1.0.26",
+	"version": "1.0.27",
 	"description": "An api wrapper for dankmemer.services.",
 	"main": "build/src/index.js",
 	"types": "build/src/index.d.ts",
 	"dependencies": {
 		"file-type": "^16.5.3",
-		"node-fetch": "^3.0.0"
+		"node-fetch": "^2.6.2"
 	},
 	"devDependencies": {
 		"@types/node": "^16.7.11",
+		"@types/node-fetch": "^2.5.12",
 		"@types/phin": "^3.4.0",
 		"@uwu-codes/eslint-config": "^1.0.20",
 		"@uwu-codes/tsconfig": "^1.0.1",
