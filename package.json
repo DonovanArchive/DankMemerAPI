@@ -10,7 +10,6 @@
 	},
 	"devDependencies": {
 		"@types/node": "^16.7.11",
-		"@types/node-fetch": "^3.0.2",
 		"@types/phin": "^3.4.0",
 		"@uwu-codes/eslint-config": "^1.0.20",
 		"@uwu-codes/tsconfig": "^1.0.1",
