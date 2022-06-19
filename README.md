@@ -3,22 +3,25 @@ This is an api wrapper built for Dank Memer's [Image Generation API](https://dan
 
 [![](https://nodei.co/npm/dankmemerapi.png)](https://npm.im/dankmemerapi)
 
+### Deprecation
+As of writing this, Dank Memer has privatized their api and revoked most (if not all) api keys. If you are looking for a solution to this, I've made my own which you can see [here](https://imgen.yiff.rest). You can also use it through this module, by setting `baseURL` to `https://imgen.yiff.rest/api`. If you want to run it on your own, you can look at the [original source](https://github.com/DankMemer/imgen), or my [dockerized version](https://github.com/DonovanDMC/DMImageGen/tree/a4ec5d8eae4f4f646c8a84ab4060a6c1dc546cd4) (pre-rebranding, `Jun 19, 20202`).
+
 ## JavaScript Example:
 ```js
 const DankMemerAPI = require("dankmemerapi");
-const fs = require("fs");
-// User agent (second param) is not required.
-const DMAPI = new DankMemerAPI("api key", "SomeUserAgent/1.0.0");
-DMAPI.abandon("text to provide").then(response => fs.writeFileSync(`${__dirname}/abandon.png`, response.file));
+const { writeFile } = require("fs/promises");
+// only apiKey is required
+const DMAPI = new DankMemerAPI({ apiKey: "api key", userAgent: "SomeUserAgent/1.0.0", baseURL: "https://dankmemer.services/api" });
+DMAPI.abandon("text to provide").then(response => writeFile(`${__dirname}/abandon.png`, response.file));
 ```
 
 ## TypeScript Example:
 ```ts
 import DankMemerAPI from "dankmemerapi";
-import * as fs from "fs";
-// User agent (second param) is not required.
-const DMAPI = new DankMemerAPI("api key", "SomeUserAgent/1.0.0");
-DMAPI.abandon("text to provide").then(response => fs.writeFileSync(`${__dirname}/abandon.png`, response.file));
+import { writeFile } from "fs/promises";
+// only apiKey is required
+const DMAPI = new DankMemerAPI({ apiKey: "api key", userAgent: "SomeUserAgent/1.0.0", baseURL: "https://dankmemer.services/api" });
+DMAPI.abandon("text to provide").then(response => writeFile(`${__dirname}/abandon.png`, response.file));
 ```
 
 The return of the functions is this structure (using the TS interface as an example):

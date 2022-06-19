@@ -1,7 +1,7 @@
 import APIError, { APIErrorBody } from "./APIError";
 import * as pkg from "../package.json";
 import fileType from "file-type";
-import fetch from "node-fetch";
+import { fetch } from "undici";
 
 export interface MemeRequestResponse {
 	ext: string;
@@ -9,22 +9,43 @@ export interface MemeRequestResponse {
 	file: Buffer;
 }
 
-class DankMemerAPI {
-	apiKey: string;
-	userAgent: string;
-	cacheRequests: boolean;
-	timeout: number;
-	constructor(d: {
+class ImageGenAPI {
+	private apiKey: string;
+	private userAgent: string;
+	private baseURL: string;
+	/**
+	 * Construct an instance of ImageGenAPI
+	 *
+	 * @param {Object} options
+	 * @param {String} options.apiKey - your api key
+	 * @param {String} [options.userAgent] - a user agent to use for requests
+	 * @param {String} [options.baseURL="https://dankmemer.services/api"] - the base url for requests
+	 */
+	constructor(options: {
 		apiKey: string;
 		userAgent?: string;
-		cacheRequests?: boolean;
-		timeout?: number;
+		baseURL?: string;
 	}) {
-		if (!d || !d.apiKey) throw new TypeError("missing api key");
-		this.apiKey = d.apiKey;
-		this.userAgent = d.userAgent || `DankMemerAPI/${pkg.version} (https://github.com/FurryBotCo/DankMemerAPI)`;
-		this.cacheRequests = !!d.cacheRequests;
-		this.timeout = !d.timeout ? 3e4 : d.timeout;
+		Object.defineProperties(this, {
+			apiKey: {
+				value: options.apiKey,
+				enumerable: false,
+				configurable: false,
+				writable: false
+			},
+			userAgent: {
+				value: options.userAgent || `ImageGenAPI/${pkg.version} (https://github.com/DonovanDMC/DankMemerAPI)`,
+				enumerable: false,
+				configurable: false,
+				writable: false
+			},
+			baseURL: {
+				value: options.baseURL || "https://dankmemer.services/api",
+				enumerable: false,
+				configurable: false,
+				writable: false
+			}
+		});
 	}
 
 	async request(path: "yomomma", avatars?: Array<string> | string, usernames?: Array<string> | string, text?: string, extra?: Record<string, string>): Promise<string>;
@@ -43,7 +64,7 @@ class DankMemerAPI {
 		if (usernames && usernames.length > 0) data.usernames = usernames;
 		if (text && text.length > 0) data.text = text;
 
-		const r = await fetch(`https://dankmemer.services/api/${path}`, {
+		const r = await fetch(`${this.baseURL}/${path}`, {
 			method: path === "yomomma" ? "GET" : "POST",
 			headers: {
 				"Authorization": this.apiKey,
@@ -52,9 +73,7 @@ class DankMemerAPI {
 			},
 			body: JSON.stringify(data)
 		});
-
-		// it returns a buffer but says it returns a string for some reason??
-		const b = await r.buffer();
+		const b = await r.arrayBuffer();
 		if (r.status !== 200) {
 			let j: APIErrorBody | string;
 			try {
@@ -72,7 +91,7 @@ class DankMemerAPI {
 		return {
 			ext: type.ext,
 			mime: type.mime,
-			file: b
+			file: Buffer.from(b)
 		};
 	}
 
@@ -109,6 +128,7 @@ class DankMemerAPI {
 	async doglemon(text: string) { return this.request("doglemon", [], [], text); }
 	async door(avatar: string) { return this.request("door", [avatar], [], ""); }
 	async egg(avatar: string) { return this.request("egg", [avatar], [], ""); }
+	async emergencymeeting(text: string) { return this.request("emergencymeeting", [], [], text); }
 	async excuseme(text: string) { return this.request("excuseme", [], [], text); }
 	async expanddong(text: string) { return this.request("expanddong", [], [], text); }
 	async expandingwwe(text: string) { return this.request("expandingwwe", [], [], text); }
@@ -165,7 +185,7 @@ class DankMemerAPI {
 	async stroke(text: string) { return this.request("stroke", [], [], text); }
 	async surprised(text: string) { return this.request("surprised", [], [], text); }
 	async sword(username: string, text: string) { return this.request("sword", [], [username], text); }
-	// theoffice
+	async theoffice(text: string) { return this.request("theoffice", [], [], text); }
 	async thesearch(text: string) { return this.request("thesearch", [], [], text); }
 	async trash(avatar: string) { return this.request("trash", [avatar], [], ""); }
 	async trigger(avatar: string) { return this.request("trigger", [avatar], [], ""); }
@@ -184,5 +204,5 @@ class DankMemerAPI {
 	async youtube(avatar: string, username: string, text: string) { return this.request("youtube", [avatar], [username], text); }
 }
 
-export default DankMemerAPI;
-export { DankMemerAPI, APIError };
+export default ImageGenAPI;
+export { ImageGenAPI, APIError };
